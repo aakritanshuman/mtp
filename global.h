@@ -55,6 +55,8 @@ extern int _numNodes;
 //number of nodes in network
 extern int _numRouterNodes;
 extern int _numHostNodes;
+
+
 extern unordered_map<int, vector<pair<int,int>>> _channels; //adjacency list format of graph edges of network
 
 

@@ -37,7 +37,7 @@ statCollectionRate=5
 timeoutClearRate=1
 timeoutEnabled=true
 signalsEnabled=true
-loggingEnabled=false
+loggingEnabled=true
 transStatStart=0
 transStatEnd=2000
 mtu=1.0
@@ -231,7 +231,6 @@ do
               
             
           else
-                # echo "**************************************"
               pids=""
               # if you add more choices for the number of paths you might run out of cores/memory
               for numPathChoices in 4
@@ -293,6 +292,7 @@ do
 
                 # run the omnetexecutable with the right parameters
                 # in the background
+                # echo "*********************abbadabba*****************"
 
                 ./spiderNet -u Cmdenv -f ${inifile}\
                     -c ${network}_${balance}_${routing_scheme}_demand${scale}_${pathChoice}_${numPathChoices}_${schedulingAlgorithm}  -n ${PATH_NAME}\
@@ -304,58 +304,58 @@ do
 
             # STEP 4: plot everything for this demand
             # TODO: add plotting script
-            # echo "Plotting"
-            # # chmod 777 scripts/generate_analysis_plots_for_single_run.py
-            # payment_graph_type='circ' 
-            # if [ "$timeoutEnabled" = true ] ; then timeout=""; else timeout="no_timeouts"; fi
-            # if [ "$random_init_bal" = true ] ; then suffix="randomInitBal_"; else suffix=""; fi
-            # if [ "$random_capacity" = true ]; then suffix="${suffix}randomCapacity_"; fi
-            # echo $suffix
-            # graph_op_prefix=${GRAPH_PATH}${timeout}/${prefix[i]}${balance}_delay${delay}_demand${scale}0_${suffix}
-            # vec_file_prefix=${PATH_NAME}results/${prefix[i]}_${payment_graph_type}_net_${balance}_
+            echo "Plotting"
+            # chmod 777 scripts/generate_analysis_plots_for_single_run.py
+            payment_graph_type='circ' 
+            if [ "$timeoutEnabled" = true ] ; then timeout=""; else timeout="no_timeouts"; fi
+            if [ "$random_init_bal" = true ] ; then suffix="randomInitBal_"; else suffix=""; fi
+            if [ "$random_capacity" = true ]; then suffix="${suffix}randomCapacity_"; fi
+            echo $suffix
+            graph_op_prefix=${GRAPH_PATH}${timeout}/${prefix[i]}${balance}_delay${delay}_demand${scale}0_${suffix}
+            vec_file_prefix=${PATH_NAME}results/${prefix[i]}_${payment_graph_type}_net_${balance}_
             
-            # #routing schemes where number of path choices doesn't matter
-            # if [ ${routing_scheme} ==  "shortestPath" ]; then 
-            #     vec_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}-#0.vec
-            #     sca_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}-#0.sca
+            #routing schemes where number of path choices doesn't matter
+            if [ ${routing_scheme} ==  "shortestPath" ]; then 
+                vec_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}-#0.vec
+                sca_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}-#0.sca
 
-            #     python scripts/generate_analysis_plots_for_single_run.py \
-            #       --detail $signalsEnabled \
-            #       --vec_file ${vec_file_path} \
-            #       --sca_file ${sca_file_path} \
-            #       --save ${graph_op_prefix}${routing_scheme}_${pathChoice} \
-            #       --balance \
-            #       --queue_info --timeouts --frac_completed \
-            #       --inflight --timeouts_sender \
-            #       --waiting --bottlenecks --time_inflight
+                python scripts/generate_analysis_plots_for_single_run.py \
+                  --detail $signalsEnabled \
+                  --vec_file ${vec_file_path} \
+                  --sca_file ${sca_file_path} \
+                  --save ${graph_op_prefix}${routing_scheme}_${pathChoice} \
+                  --balance \
+                  --queue_info --timeouts --frac_completed \
+                  --inflight --timeouts_sender \
+                  --waiting --bottlenecks --time_inflight
             
 
-            # #routing schemes where number of path choices matter
-            # else
-            #   for numPathChoices in 4
-            #     do
-            #         vec_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}_${numPathChoices}_${schedulingAlgorithm}-#0.vec
-            #         sca_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}_${numPathChoices}_${schedulingAlgorithm}-#0.sca
-            #         # echo "44444444444444444444444"
-            #         # echo ${sca_file_path}
-            #         # echo "5555555555555555555555555"
+            #routing schemes where number of path choices matter
+            else
+              for numPathChoices in 4
+                do
+                    vec_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}_${numPathChoices}_${schedulingAlgorithm}-#0.vec
+                    sca_file_path=${vec_file_prefix}${routing_scheme}_demand${scale}_${pathChoice}_${numPathChoices}_${schedulingAlgorithm}-#0.sca
+                    # echo "44444444444444444444444"
+                    # echo ${sca_file_path}
+                    # echo "5555555555555555555555555"
 
-            #         python scripts/generate_analysis_plots_for_single_run.py \
-            #           --detail $signalsEnabled \
-            #           --vec_file ${vec_file_path} \
-            #           --sca_file ${sca_file_path} \
-            #           --save ${graph_op_prefix}${routing_scheme}_${pathChoice}_${numPathChoices} \
-            #           --balance \
-            #           --queue_info --timeouts --frac_completed \
-            #           --frac_completed_window \
-            #           --inflight --timeouts_sender --time_inflight \
-            #           --waiting --bottlenecks --probabilities \
-            #           --mu_local --lambda --n_local --service_arrival_ratio --inflight_outgoing \
-            #           --inflight_incoming --rate_to_send --price --mu_remote --demand \
-            #           --rate_sent --amt_inflight_per_path --rate_acked --fraction_marked --queue_delay \
-            #           --cpi --perDestQueue --kStar
-            #       done
-            #   fi
+                    python scripts/generate_analysis_plots_for_single_run.py \
+                      --detail $signalsEnabled \
+                      --vec_file ${vec_file_path} \
+                      --sca_file ${sca_file_path} \
+                      --save ${graph_op_prefix}${routing_scheme}_${pathChoice}_${numPathChoices} \
+                      --balance \
+                      --queue_info --timeouts --frac_completed \
+                      --frac_completed_window \
+                      --inflight --timeouts_sender --time_inflight \
+                      --waiting --bottlenecks --probabilities \
+                      --mu_local --lambda --n_local --service_arrival_ratio --inflight_outgoing \
+                      --inflight_incoming --rate_to_send --price --mu_remote --demand \
+                      --rate_sent --amt_inflight_per_path --rate_acked --fraction_marked --queue_delay \
+                      --cpi --perDestQueue --kStar
+                  done
+              fi
 
             # # STEP 5: cleanup        
             # rm ${PATH_NAME}${prefix[i]}_circ*_demand${scale}.ini

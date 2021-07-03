@@ -26,7 +26,7 @@ class hostNodeLndBaseline : public hostNodeBase {
         // helpers
         virtual void initializeMyChannels();
         virtual void pruneEdge(int sourceNode, int destNode);
-        virtual vector<int> generateNextPath(int destNode);
+        virtual vector<int> generateNextPath(int destNode, double amount);
         virtual void recordTailRetries(simtime_t timeSent, bool success, int retries);
 
 

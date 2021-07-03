@@ -266,15 +266,19 @@ def print_topology_in_format(G, balance_per_channel, delay_per_channel, output_f
             f1.write(str(n) + "e " + str(n) + "r ")
             f1.write(str(end_host_delay) + " " + str(end_host_delay) + " ")
             if rebalancing_enabled:
-                f1.write(str(REASONABLE_BALANCE) + " " + str(REASONABLE_ROUTER_BALANCE) + "\n")
+                f1.write(str(REASONABLE_BALANCE) + " " + str(REASONABLE_ROUTER_BALANCE) + " ")
             else:
-                f1.write(str(LARGE_BALANCE/2) + " " + str(LARGE_BALANCE/2) + "\n")
-
+                f1.write(str(LARGE_BALANCE/2) + " " + str(LARGE_BALANCE/2) + " ")
+            f1.write(str(G[e[0]][e[1]]['bf1']) + " " + str(G[e[0]][e[1]]['bf2']) + " ");
+            f1.write(str(G[e[0]][e[1]]['fr1']) + " " + str(G[e[0]][e[1]]['fr2']) + "\n");
+    
         if args.graph_type == "parallel_graph":
             for (e,r) in zip([1,3], [0, 2]):
                 f1.write(str(e) + "e " + str(r) + "r ")
                 f1.write(str(end_host_delay) + " " + str(end_host_delay) + " ")
-                f1.write(str(LARGE_BALANCE/2) + " " + str(LARGE_BALANCE/2) + "\n")
+                f1.write(str(LARGE_BALANCE/2) + " " + str(LARGE_BALANCE/2) + " ")
+
+        
     f1.close()
 
     nx.set_edge_attributes(G, capacity_dict, 'capacity')

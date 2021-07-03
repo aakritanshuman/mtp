@@ -44,6 +44,11 @@ unordered_map<tuple<int,int>,double, hashId> _balances;
 
 unordered_map<tuple<int,int>,double, hashId> _capacities;
 
+
+
+unordered_map<tuple<int,int>,double, hashId> _basefees;
+unordered_map<tuple<int,int>, double, hashId> _feerates;
+
 // controls algorithm and what is outputted
 bool _waterfillingEnabled;
 bool _dctcpEnabled;
@@ -1600,10 +1605,13 @@ void hostNodeBase::initialize() {
         if (_waterfillingEnabled || _priceSchemeEnabled || _landmarkRoutingEnabled || _dctcpEnabled){
            _kValue = par("numPathChoices");
         }
-        
+        cout<<"Before topology"<<endl;
         setNumNodes(topologyFile_);
+        cout<<"Before workload"<<endl;
         generateTransUnitList(workloadFile_);
+        cout<<"After workload"<<endl;
         generateChannelsBalancesMap(topologyFile_);
+         cout<<"After generate channel map"<<endl;
     }
     
     // set index and compute the top percentile size to choose elements accordingly

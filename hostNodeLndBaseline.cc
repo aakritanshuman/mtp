@@ -55,7 +55,7 @@ void hostNodeLndBaseline::initializeMyChannels(){
 
 /* generates next path, but adding in the edges whose retore times are over, then running
  * BFS on _activeChannels */
-vector<int>  hostNodeLndBaseline::generateNextPath(int destNodePath){
+vector<int>  hostNodeLndBaseline::generateNextPath(int destNodePath, double amount){
     if (_prunedChannelsList.size() > 0){
         tuple<simtime_t, tuple<int, int>> currentEdge =  _prunedChannelsList.front();
         while (_prunedChannelsList.size()>0 && (get<0>(currentEdge) + _restorePeriod < simTime())){
@@ -67,6 +67,8 @@ vector<int>  hostNodeLndBaseline::generateNextPath(int destNodePath){
                 currentEdge =  _prunedChannelsList.front();
         }
     }
+    cout<<amount<<endl;
+    cout<<"Amount has been printed...................!!!!!!!!!!"<<endl;
     vector<int> resultPath = breadthFirstSearchByGraph(myIndex(),destNodePath, _activeChannels);
     return resultPath;       
 }
@@ -211,8 +213,8 @@ void hostNodeLndBaseline::handleTransactionMessageSpecialized(routerMsg* ttmsg){
         }
         if (splitInfo->numArrived == 1)     
             statNumArrived[destNode] += 1;
-
-        vector<int> newRoute = generateNextPath(destNode);
+        
+        vector<int> newRoute = generateNextPath(destNode,transMsg->getAmount());
         //note: number of paths attempted is calculated as pathIndex + 1, so if fails
         //without attempting any paths, want 0 = -1+1
         transMsg->setPathIndex(-1);
@@ -234,6 +236,7 @@ void hostNodeLndBaseline::handleTransactionMessageSpecialized(routerMsg* ttmsg){
 /* handleAckMessageNoMoreRoute - increments failed statistics, and deletes all three messages:
  * ackMsg, transMsg, routerMsg */
 void hostNodeLndBaseline::handleAckMessageNoMoreRoutes(routerMsg *msg, bool toDelete){
+
     ackMsg *aMsg = check_and_cast<ackMsg *>(msg->getEncapsulatedPacket());
     transactionMsg *transMsg = check_and_cast<transactionMsg *>(aMsg->getEncapsulatedPacket());
     int numPathsAttempted = aMsg->getPathIndex() + 1;
@@ -315,7 +318,7 @@ void hostNodeLndBaseline::handleAckMessageSpecialized(routerMsg *msg)
         int failedDest = msg->getRoute()[failedHopNum - 1];
         pruneEdge(failedSource, failedDest);
 
-        vector<int> newRoute = generateNextPath(transMsg->getReceiver());
+        vector<int> newRoute = generateNextPath(transMsg->getReceiver(),transMsg->getAmount());
         if (newRoute.size() == 0) {
             handleAckMessageNoMoreRoutes(msg, false);
             hostNodeBase::handleAckMessage(msg);

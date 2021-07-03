@@ -86,7 +86,7 @@ void generateChannelsBalancesMap(string topologyFile) {
             _balances[make_tuple(node1,node2)] = balance1;
             _balances[make_tuple(node2,node1)] = balance2;
 
-            
+            cout<<"init1 "<<lineNum<<endl;
             //***************************************************
             //code for transaction fee
             _basefees[make_tuple(node1,node2)] = stod( data[6]);
@@ -94,10 +94,11 @@ void generateChannelsBalancesMap(string topologyFile) {
             _feerates[make_tuple(node1,node2)] = stod( data[8]);
             _feerates[make_tuple(node2,node1)] = stod( data[9]);
             //***************************************************
-
+            cout<<"init2"<<endl;
             tuple<int, int> senderReceiverPair = (node1 < node2) ? make_tuple(node1, node2) :
                 make_tuple(node2, node1);
             _capacities[senderReceiverPair] = balance1 + balance2;
+            cout<<"init3"<<endl;
             data = split(line, ' ');
         }
 
@@ -737,7 +738,7 @@ vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pai
     parent[src] = -1;
     // Distance of source vertex from itself is always 0
     dist[src] = 0;
-
+    cout<<"Amount received !!!!!!!!!!!!!!!!!!!!!!11111111111";
     // Find shortest path for all vertices
     for (int count = 0; count < _numNodes - 1; count++)
     {
@@ -762,7 +763,6 @@ vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pai
                 if(dist[u] + (vectIter->second) < dist[vectIter->first]){
                     parent[vectIter->first] = u;
                     dist[vectIter->first] = dist[u] + vectIter->second;
-
                 }
             }
         }
