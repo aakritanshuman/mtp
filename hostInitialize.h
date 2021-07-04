@@ -18,6 +18,10 @@ void initializePathMaps(string filename);
 
 //search functions
 vector<int> breadthFirstSearch(int sender, int receiver);
+
+
+
+
 vector<int> breadthFirstSearchByGraph(int sender, int receiver, unordered_map<int, set<int>> graph);
 vector<int> dijkstra(int src, int dest);
 
@@ -39,7 +43,11 @@ bool sortEDF(const tuple<int,double, routerMsg*, Id, simtime_t> &a,
       const tuple<int,double, routerMsg*, Id, simtime_t> &b);
 
 unordered_map<int, vector<pair<int,int>>> removeRoute( unordered_map<int, vector<pair<int,int>>> channels, vector<int> route);
-vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pair<int,int>>> channels);
+
+
+
+
+vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pair<int,int>>> channels,double amount);
 double minVectorElemDouble(vector<double> v);
 double maxDouble(double x, double y);
 

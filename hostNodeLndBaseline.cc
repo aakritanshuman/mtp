@@ -69,7 +69,7 @@ vector<int>  hostNodeLndBaseline::generateNextPath(int destNodePath, double amou
     }
     cout<<amount<<endl;
     cout<<"Amount has been printed...................!!!!!!!!!!"<<endl;
-    vector<int> resultPath = breadthFirstSearchByGraph(myIndex(),destNodePath, _activeChannels);
+    vector<int> resultPath = dijkstraInputGraph(myIndex(),destNodePath, _channels,amount);
     return resultPath;       
 }
 

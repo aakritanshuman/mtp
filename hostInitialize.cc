@@ -71,7 +71,7 @@ void generateChannelsBalancesMap(string topologyFile) {
             else //(node1 is in map)
                 _channels[node1].push_back(make_pair(node2,delay1to2));
 
-            if (_channels.count(node2)==0){ //node 1 is not in map
+            if (_channels.count(node2)==0){ //node 2 is not in map
                 vector<pair<int,int>> tempVector = {make_pair(node1,delay2to1)};
                 _channels[node2] = tempVector;
             }
@@ -86,7 +86,7 @@ void generateChannelsBalancesMap(string topologyFile) {
             _balances[make_tuple(node1,node2)] = balance1;
             _balances[make_tuple(node2,node1)] = balance2;
 
-            cout<<"init1 "<<lineNum<<endl;
+            // cout<<"init1 "<<lineNum<<endl;
             //***************************************************
             //code for transaction fee
             _basefees[make_tuple(node1,node2)] = stod( data[6]);
@@ -94,7 +94,7 @@ void generateChannelsBalancesMap(string topologyFile) {
             _feerates[make_tuple(node1,node2)] = stod( data[8]);
             _feerates[make_tuple(node2,node1)] = stod( data[9]);
             //***************************************************
-            cout<<"init2"<<endl;
+            // cout<<"init2"<<endl;
             tuple<int, int> senderReceiverPair = (node1 < node2) ? make_tuple(node1, node2) :
                 make_tuple(node2, node1);
             _capacities[senderReceiverPair] = balance1 + balance2;
@@ -312,7 +312,7 @@ void updateMaxTravelTime(vector<int> route){
  *  includes sender and reciever as first and last entry
  */
 vector<int> getRoute(int sender, int receiver){
-    vector<int> route = dijkstraInputGraph(sender, receiver, _channels);
+    vector<int> route = dijkstraInputGraph(sender, receiver, _channels,0.0);
     updateMaxTravelTime(route);
     return route;
 }
@@ -364,7 +364,7 @@ vector<vector<int>> getKShortestRoutes(int sender, int receiver, int k){
     vector<int> route;
     auto tempChannels = _channels;
     for ( int it = 0; it < k; it++ ){
-        route = dijkstraInputGraph(sender, receiver, tempChannels);
+        route = dijkstraInputGraph(sender, receiver, tempChannels,0.0);
         
         if (route.size() <= 1){
             return shortestRoutes;
@@ -716,7 +716,7 @@ void printSolution(int dist[], int source,
     cout << "end print solution " << endl;
 }
 
-vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pair<int,int>>> channels){
+vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pair<int,int>>> channels,double amount){
     // The output array. dist[i] will hold the shortest distance from src to i
     int dist[_numNodes];
 
@@ -760,9 +760,9 @@ vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pai
             // Update dist[v] only if is not in sptSet, there is an edge from u to v, and
             // total weight of path from src to v through u is smaller than current value of dist[v]
             if (!sptSet[vectIter->first]){
-                if(dist[u] + (vectIter->second) < dist[vectIter->first]){
+                if(dist[u] + (vectIter->second) + _basefees[make_tuple(vectIter->first,vectIter->second)] +amount*_feerates[make_tuple(vectIter->first,vectIter->second)]< dist[vectIter->first]){
                     parent[vectIter->first] = u;
-                    dist[vectIter->first] = dist[u] + vectIter->second;
+                    dist[vectIter->first] = dist[u] + vectIter->second + _basefees[make_tuple(vectIter->first,vectIter->second)] +amount*_feerates[make_tuple(vectIter->first,vectIter->second)];
                 }
             }
         }

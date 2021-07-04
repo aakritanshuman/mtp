@@ -32,7 +32,7 @@ obliviousRoutingEnabled=false
 kspYenEnabled=false
 
 #general parameters that do not affect config names
-simulationLength=1
+simulationLength=20
 statCollectionRate=5
 timeoutClearRate=1
 timeoutEnabled=true
