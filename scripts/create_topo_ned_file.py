@@ -240,7 +240,8 @@ def print_topology_in_format(G, balance_per_channel, delay_per_channel, output_f
                 balance_for_this_channel = float(G[e[0]][e[1]]['capacity'] *10 * balance_per_channel)
             else:
                 # print("check blanace")
-                balance_for_this_channel = 16*0.00011111*(float(G[e[0]][e[1]]['capacity']))
+                # base case
+                balance_for_this_channel = 0.00011111*(float(G[e[0]][e[1]]['capacity']))
         
         else:
             balance_for_this_channel = balance_per_channel

@@ -41,6 +41,7 @@ unordered_map<int, vector<pair<int,int>>> _channels;
 
 //unordered_map of balances for each edge; key = <int,int> is <source, destination>
 unordered_map<tuple<int,int>,double, hashId> _balances;
+unordered_map<tuple<int,int>,double, hashId> _currbalances;
 
 unordered_map<tuple<int,int>,double, hashId> _capacities;
 
@@ -1886,4 +1887,19 @@ void hostNodeBase::deleteMessagesInQueues(){
  */ 
 void hostNodeBase::setPaymentChannelBalanceByNode(int node, double amt){
        nodeToPaymentChannel[node].balance = amt;
+       double halfcap=(_capacities[make_tuple(myIndex(),node)]/2);
+       if(amt<halfcap)
+       {
+            _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]*2; 
+            _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]*2;
+            _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]/2; 
+            _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]/2;
+       }
+       else if(amt>halfcap)
+       {
+            _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]/2; 
+            _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]/2;
+            _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]*2; 
+            _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]*2;
+       }
 }

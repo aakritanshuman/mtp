@@ -61,6 +61,8 @@ extern unordered_map<int, vector<pair<int,int>>> _channels; //adjacency list for
 
 
 extern unordered_map<tuple<int,int>,double, hashId> _balances;
+// extern unordered_map<tuple<int,int>,double, hashId> _currbalances;
+
 extern unordered_map<tuple<int,int>, double, hashId> _capacities;
 
 

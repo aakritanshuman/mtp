@@ -86,6 +86,13 @@ void generateChannelsBalancesMap(string topologyFile) {
             _balances[make_tuple(node1,node2)] = balance1;
             _balances[make_tuple(node2,node1)] = balance2;
 
+
+            // _currbalances[make_tuple(node1,node2)] = balance1;
+            // _currbalances[make_tuple(node2,node1)] = balance2;
+
+
+
+
             // cout<<"init1 "<<lineNum<<endl;
             //***************************************************
             //code for transaction fee
@@ -95,6 +102,12 @@ void generateChannelsBalancesMap(string topologyFile) {
             _feerates[make_tuple(node2,node1)] = stod( data[9]);
             //***************************************************
             // cout<<"init2"<<endl;
+
+
+
+
+
+
             tuple<int, int> senderReceiverPair = (node1 < node2) ? make_tuple(node1, node2) :
                 make_tuple(node2, node1);
             _capacities[senderReceiverPair] = balance1 + balance2;
