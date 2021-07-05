@@ -1887,19 +1887,38 @@ void hostNodeBase::deleteMessagesInQueues(){
  */ 
 void hostNodeBase::setPaymentChannelBalanceByNode(int node, double amt){
        nodeToPaymentChannel[node].balance = amt;
-       double halfcap=(_capacities[make_tuple(myIndex(),node)]/2);
-       if(amt<halfcap)
+       double other=(_capacities[make_tuple(myIndex(),node)]-amt);
+       double weight=abs(amt-other)/_capacities[make_tuple(myIndex(),node)];
+
+       if(weight>0.4)
        {
-            _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]*2; 
-            _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]*2;
-            _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]/2; 
-            _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]/2;
+            if(amt<other)
+            {
+                _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]*10; 
+                _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]*10;
+                _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]/10; 
+                _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]/10;              
+            }
+            else
+            {
+                _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]/10; 
+                _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]/10;
+                _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]*10; 
+                _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]*10;   
+            }
        }
-       else if(amt>halfcap)
-       {
-            _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]/2; 
-            _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]/2;
-            _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]*2; 
-            _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]*2;
-       }
+       // else if(weight<0.5)
+       // {
+       //      _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]*2; 
+       //      _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]*2;
+       //      _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]/2; 
+       //      _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]/2;
+       // }
+       // else if(amt>halfcap)
+       // {
+       //      _basefees[make_tuple(myIndex(),node)]=_basefees[make_tuple(myIndex(),node)]/2; 
+       //      _feerates[make_tuple(myIndex(),node)]=_feerates[make_tuple(myIndex(),node)]/2;
+       //      _basefees[make_tuple(node,myIndex())]=_basefees[make_tuple(myIndex(),node)]*2; 
+       //      _feerates[make_tuple(node,myIndex())]=_feerates[make_tuple(myIndex(),node)]*2;
+       // }
 }

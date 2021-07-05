@@ -773,9 +773,9 @@ vector<int> dijkstraInputGraph(int src,  int dest, unordered_map<int, vector<pai
             // Update dist[v] only if is not in sptSet, there is an edge from u to v, and
             // total weight of path from src to v through u is smaller than current value of dist[v]
             if (!sptSet[vectIter->first]){
-                if(dist[u] + (vectIter->second) + _basefees[make_tuple(vectIter->first,vectIter->second)] +amount*_feerates[make_tuple(vectIter->first,vectIter->second)]< dist[vectIter->first]){
+                if(dist[u] + (vectIter->second) + 10*(_basefees[make_tuple(vectIter->first,vectIter->second)] +amount*_feerates[make_tuple(vectIter->first,vectIter->second)])< dist[vectIter->first]) {
                     parent[vectIter->first] = u;
-                    dist[vectIter->first] = dist[u] + vectIter->second + _basefees[make_tuple(vectIter->first,vectIter->second)] +amount*_feerates[make_tuple(vectIter->first,vectIter->second)];
+                    dist[vectIter->first] = dist[u] + vectIter->second + 10*(_basefees[make_tuple(vectIter->first,vectIter->second)] +amount*_feerates[make_tuple(vectIter->first,vectIter->second)]);
                 }
             }
         }
